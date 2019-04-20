@@ -1,0 +1,11 @@
+.left{
+/* text-align: center; */
+	 		padding: 20px;
+      border:dotted;
+    }
+.left-text{
+padding:1px;
+}
+img{
+  border-radius: 50%;
+}
