@@ -9,6 +9,7 @@ import { PrimaryKeyServiceService } from './primary-key-service.service';
 import { FriendPrimaryKeyService } from './friend-primary-key.service';
 import { MyProfileEachPostComponent } from './my-profile-each-post/my-profile-each-post.component';
 import { EachCommentOfPostsComponent } from './each-comment-of-posts/each-comment-of-posts.component';
+import { FriendProfileRequestComponent } from './friend-profile-request/friend-profile-request.component';
 
 
 
@@ -18,7 +19,8 @@ import { EachCommentOfPostsComponent } from './each-comment-of-posts/each-commen
     AppComponent,
     routingComponents,
     MyProfileEachPostComponent,
-    EachCommentOfPostsComponent
+    EachCommentOfPostsComponent,
+    FriendProfileRequestComponent
   ],
   imports: [
     BrowserModule,
