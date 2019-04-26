@@ -1,4 +1,4 @@
-
+<!--
 <div class="btn-group" role="group">
   <button type="button" class="btn btn-secondary" routerLink = "/login">Login</button>
   <button type="button" class="btn btn-secondary" routerLink = "/register">Register</button>
@@ -33,7 +33,7 @@
 <br> -->
 
 <!-- <form id="user_info" method="post" action=""> -->
-<div class = "row">
+<!-- <div class = "row">
   	<div class = "form-group col-md-4 offset-md-4">
 <h2>Registration</h2>
 </div>
@@ -85,5 +85,96 @@
   </div>
   </div>
   </div>
+</div>  -->
+<!-- </form> -->
+
+
+
+
+
+
+
+
+
+
+
+
+<div class = "row main-container-text">
+  <div class = "col-md-10">  Instabook</div>
+  <div class="col-md-2 btn-group" role="group">
+    <button type="button" class="btn btn-secondary" routerLink = "/login">Login</button>
+    <button type="button" class="btn btn-secondary" routerLink = "/register">Register</button>
+  </div>
 </div>
+
+<div class= "background" >
+<div class = "content">
+<div class = "row">
+  	<div class = "form-group col-md-4 offset-md-4">
+<h2>Registration</h2>
+</div>
+</div>
+  <div class = "row">
+	<div class = "form-group col-md-4 offset-md-4">
+		<label for="username">Username:</label>
+		<input  type="text" class="form-control" id="username" name="username"  (keyup) = "registrationInputForFullName($event)">
+	</div>
+  </div>
+  <div class = "row">
+	<div class = "form-group col-md-4 offset-md-4">
+    <label for="useremail">Email:</label>
+    <input type="text" class="form-control" id="useremail" name="useremail" (keyup) = "registrationInputForEmail($event)">
+  </div>
+  </div>
+
+  <div class = "row">
+	<div class = "form-group col-md-4 offset-md-4">
+		<label for="userpassword">Password:</label>
+		<input type="Password" class="form-control" id="userpassword" name="userpassword" (keyup) = "registrationInputForPassword($event)">
+	</div>
+  </div>
+  <div class = "row">
+  <div class = "form-group col-md-4 offset-md-4">
+    <label for="userconfirmpassword">Confirm Password:</label>
+    <input type="Password" class="form-control" id="userconfirmpassword" name="userconfirmpassword">
+  </div>
+  </div>
+
+
+  <div class = "row">
+	<div class = "form-group col-md-4 offset-md-4">
+    <label >Date of Birth</label>
+    <input type="date" class="form-control" placeholder="enter DOB" name="dob" required>
+  </div>
+  </div>
+  <div class = "row">
+	<div class = "form-group col-md-4 offset-md-4">
+    <label >Upload Profile Picture</label>
+    <input type="file" name="profilePic" accept="image/*" (change) = "onImageUpload($event)">
+  </div>
+  </div>
+  <div class = "row">
+	<div class = "form-group col-md-4 offset-md-4">
+  <div id="user_submit">
+		<button type="submit" class="btn btn-success" (click) = "validateRegistration()">Validate</button>
+	</div>
+  </div>
+  </div>
+  </div>
+</div>
+
+<div class="footer">
+    <div class="row">
+        <div class="col span-1-of-2">
+            <ul class="footer-nav">
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Blog</a></li>
+
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+<p *ngIf="errorFlag">{{errorMessage}}</p>
 <!-- </form> -->
