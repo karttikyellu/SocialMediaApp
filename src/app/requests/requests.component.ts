@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {PrimaryKeyServiceService} from "../primary-key-service.service";
 import {HttpClient} from "@angular/common/http";
-import {frndRequests} from "../friendRequest";
 import {Router} from "@angular/router";
 
 @Component({
