@@ -1,16 +1,33 @@
-<nav>
-    <a class = "header-links-style" [routerLink] = "['./notifications']">notifications</a>
+<div class = "row main-container-text">
+  <div class = "col-md-10">Instabook</div>
+  <div class="col-md-2 btn-group" role="group">
+    <button type="button" class="btn btn-secondary" routerLink = "/login">Logout</button>
+  </div>
+</div>
+
+
+
+<nav class='navbar'>
+  <button type="button" class="links btn btn-default" [routerLink] = "['./notifications']">Notifications</button>
+  <button type="button" class="links btn btn-default" [routerLink] = "['./search']">Search</button>
+  <button type="button" class="links btn btn-default" [routerLink] = "['./privacy']">Privacy</button>
+  <button type="button" class="links btn btn-default" [routerLink] = "['./post']">Post</button>
+  <button type="button" class="links btn btn-default" [routerLink] = "['./viewaccount']">View Account</button>
+  <button type="button" class="links btn btn-default" [routerLink] = "['./messaging']">Messaging</button>
+  <button type="button" class="links btn btn-default" [routerLink] = "['./myProfilePage']">My Profile</button>
+  </nav>
+    <!-- <a class = "header-links-style" [routerLink] = "['./notifications']">notifications</a>
     <a class = "header-links-style" [routerLink] = "['./search']">search</a>
     <a class = "header-links-style" [routerLink] = "['./privacy']">privacy</a>
     <a class = "header-links-style" [routerLink] = "['./post']" >post</a>
     <a class = "header-links-style" [routerLink] = "['./viewaccount']">view account</a>
     <a class = "header-links-style" [routerLink] = "['./messaging']">messaging</a>
-    <a class = "header-links-style" [routerLink] = "['./myProfilePage']">My Profile</a>
-</nav>
-<div  class = "row" style = "height: 500px; border: solid">
+    <a class = "header-links-style" [routerLink] = "['./myProfilePage']">My Profile</a> -->
+
+<div  class = "row" style = " border: solid">
   <div class = "col-md-3 left">
     <div>
-      <img src = "{{ProfilePicture}}" class=" img-responsive " alt = "profile pic" width="200px" height = "200px" >
+      <img src = "{{ProfilePicture}}" class=" rounded-circle " alt = "profile pic" width="250px" height = "250px" >
       <div class ="row left-text" >
         <div class = "col-md-2">
       <p><i class = "material-icons" style="font-size:24px"> person</i></p>
@@ -35,11 +52,9 @@
 <h5>{{address}}</h5>
 </div>
 </div>
-
-
       </div>
       </div>
-      <div class = "col-md-9">
+      <div class = "col-md-9 content">
         <router-outlet></router-outlet>
         </div>
     </div>

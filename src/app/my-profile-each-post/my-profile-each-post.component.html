@@ -1,12 +1,12 @@
 <div class="row main">
-  <div class="col-md-4 offset-md-3 ">
-<div  class = "size"style = " background-color: white;border: 3px; border-style: outset;  ">
+  <div class="col-md-4 offset-md-2 ">
+<div  class = "size"  >
   <small>DatePosted : {{datePosted}}</small>
-  <h3 style = " color:#1A237E">{{postTexted}}</h3>
+  <h3 style = ""><b>{{postTexted}}</b></h3>
 
   <div *ngIf="imageFlag">
     <div class="card" style="width: 500px">
-    <img   class="img-responsive" src={{imgOrVid}}  class="img-thumbnail" width="500" height="500">
+    <img class="img-responsive" src={{imgOrVid}}  class="img-thumbnail" width="500" height="500">
     <!-- <div class="card-body">
       <h4 class="card-text">{{postTexted}}</h4>
     </div> -->
@@ -18,18 +18,19 @@
     </video>
   </div>
   <br>
-    <button type="button"class="btn btn-secondary btn-sm"   (click)="openComments()">Comments</button>
+    <button type="button"class="btn btn-primary btn-sm"   (click)="openComments()">Comments</button>
     <div *ngIf = "showCommentsFlag">
       <br>
-      <div class = "row">
-    	<div class = "form-group col-md-4 ">
-      <input type="text" class="form-control round" id="commentText" name="commentText"   placeholder = " write a comment..."(keyup) = "onCommentTextEntered($event)">
-      </div>
-      <div class = "form-group col-md-1 ">
-      <input type="file" name ="commentPic" accept="image/*|video/* " (change) = "onImageUpload($event)"><br>
+      <div class = "row col-md-10">
+    	<div class = "form-group">
+      <input type="text" (keydown.Enter)="postNewComment()" class="form-control round" id="commentText" name="commentText"   placeholder = " write a comment..."(keyup) = "onCommentTextEntered($event)">
+      </div>&nbsp;
+      <div class = "form-group">
+      <button  type="button" id="com" class="commentbutton" class="btn btn-success btn-sm" (click)="postNewComment()" >Comment!</button>
     </div>
     </div>
-      <button  type="button" class="btn btn-secondary btn-sm" (click)="postNewComment()" >Comment!</button>
+    <input type="file"  name ="commentPic" accept="image/*|video/* " (change) = "onImageUpload($event)"><br>
+
       <br>
       <app-each-comment-of-posts *ngFor="let eachCommentId of commentIdArray" [eachCommentId]="eachCommentId"></app-each-comment-of-posts>
     </div>

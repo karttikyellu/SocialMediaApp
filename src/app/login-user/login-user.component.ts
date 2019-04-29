@@ -11,8 +11,8 @@ import { PrimaryKeyServiceService } from '../primary-key-service.service';
 export class LoginUserComponent implements OnInit {
 
   errorMessage:string = "";
-  errorFlag:boolean = false;
-
+  emailFlag:boolean = false;
+  errorFlag:boolean;
   emailid:string = "";
   password:string = "";
   constructor( private http: HttpClient , private router: Router , private primaryKeyService: PrimaryKeyServiceService ) {
@@ -38,7 +38,10 @@ export class LoginUserComponent implements OnInit {
     console.log(this.errorMessage);
     console.log('email : ' + this.emailid);
     console.log('password : ' + this.password);
-
+    if(this.emailid == '' || this.password == ''){
+      this.emailFlag = true;
+      this.errorMessage = 'Please enter valid credentials'
+    }
     let obs = this.http.get('http://localhost:3000/person/loginCheck/' + this.emailid + '/' + this.password);
     obs.subscribe((data: any) => {
           console.log('login error response : ' + data.error);

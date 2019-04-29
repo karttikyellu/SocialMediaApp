@@ -1,8 +1,15 @@
 .main{
-  background-color:#E3F2FD;
+/* margin-top: 10px; */
+padding:50px;
 }
 .container{
   background-color:white;
-  border: 5px dotted #3F51B5;
+  border: 15px outset #3F51B5;
 
+}
+.top{
+  margin-top: 50px;
+}
+.bottom{
+  margin-bottom: 50px;
 }

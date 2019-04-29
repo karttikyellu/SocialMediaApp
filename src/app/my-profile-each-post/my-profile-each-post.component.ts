@@ -129,8 +129,11 @@ export class MyProfileEachPostComponent implements OnInit {
       fd.append("commentImageOrVideo", this.selectedImageOrVideo);
 
       let obs = this.http.post('http://localhost:3000/person/commentsOnThisPost', fd);
+
       obs.subscribe((data:any) => {
         console.log(data);
+        this.showCommentsFlag = false;
+        this.openComments();
         },
         (err:any) => {
             console.log(err);

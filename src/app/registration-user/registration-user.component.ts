@@ -9,17 +9,14 @@ import * as $ from 'jquery';
   styleUrls: ['./registration-user.component.css']
 })
 export class RegistrationUserComponent implements OnInit {
-
   errorMessage: string = "";
-
   emailId:string = "";
   password:string = "";
   fullName:string = "";
   address:string = "";
   selectedImage:File = null;
-
   errorFlag: boolean = false;
-
+  dateOfBirth: date
   constructor(private http: HttpClient , private router: Router) {
   }
 
@@ -69,6 +66,7 @@ export class RegistrationUserComponent implements OnInit {
             $('#username + span').removeClass('info');
             $('#username + span').text('ok');
             $('#username + span').addClass('ok');
+
           } else {
             $('#username +span').text('Error');
             $('#username +span').addClass('error');
@@ -91,6 +89,7 @@ export class RegistrationUserComponent implements OnInit {
               $('#userpassword + span').removeClass('info');
               $('#userpassword + span').text('OK');
               $('#userpassword + span').addClass('ok');
+
             } else {
               $('#userpassword + span').html(error);
             }
@@ -115,6 +114,7 @@ export class RegistrationUserComponent implements OnInit {
               $('#userconfirmpassword + span').removeClass('info');
               $('#userconfirmpassword + span').text('OK');
               $('#userconfirmpassword + span').addClass('ok');
+
             }
           } else {
             $('#userconfirmpassword + span').text('Error');
@@ -134,12 +134,21 @@ export class RegistrationUserComponent implements OnInit {
         if ($('#useremail').val().length != 0) {
           if (/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test($('#useremail').val())) {
             $('#useremail + span').removeClass('info');
-            $('#useremail + span').text('OK');
-            $('#useremail + span').addClass('ok');
+            $.post('http://localhost:3000/person/emailDuplicationCheck',
+              {
+                email: $('#useremail').val()
+              },
+              function(data, status){
+                if(data)
+                  $('#useremail + span').text('Email Id is taken');
+                else
+                  $('#useremail + span').text('OK');
+              });
           } else {
             $('#useremail + span').text('Error');
             $('#useremail + span').addClass('error');
           }
+
         }
         else
           $("#useremail+span").hide();
@@ -162,6 +171,10 @@ export class RegistrationUserComponent implements OnInit {
     this.password = event.target.value;
   }
 
+  // registrationInputForDOB(event: any){
+  //   this.dob = event.target.value;
+  // }
+
   onImageUpload(event: any) {
     console.log(event);
     this.selectedImage = event.target.files[0];
@@ -169,18 +182,25 @@ export class RegistrationUserComponent implements OnInit {
 
 
   validateRegistration() {
-    console.log('errorMessage ' + this.errorMessage);
+    $('#msg').html('');
+
+    if(this.fullName=='' || this.emailId=='' || this.password=='' || this.dateOfBirth=='' || this.selectedImage==null){
+      $('#msg').html('Please enter all the (*)required fields');
+    }
+
+    console.log('dateOfBirth ' + this.dateOfBirth);
     console.log('emailId ' + this.emailId);
     console.log('password ' + this.password);
     console.log('fullName ' + this.fullName);
     console.log('address ' + this.address);
-    console.log('pic ' + this.selectedImage.name);
+    // console.log('pic ' + this.selectedImage.name);
     console.log('errorFlag ' + this.errorFlag);
+
 
     const fd = new FormData();
     fd.append('name', this.fullName);
     fd.append('address', 'McCallum');
-    fd.append('dateOfBirth', '04/15/1995');
+    fd.append('dateOfBirth', ""+this.dateOfBirth);
     fd.append('email', this.emailId);
     fd.append('password', this.password);
     fd.append('personPic', this.selectedImage);
@@ -188,7 +208,8 @@ export class RegistrationUserComponent implements OnInit {
     let obs = this.http.post('http://localhost:3000/person/newUserCreation', fd);
     obs.subscribe((data:any) => {
         console.log(data);
-
+        $('#msg').html('User Registration Successful');
+        this.router.navigate(['/login']);
         let obs1 = this.http.post('http://localhost:3000/person/privacySettingsCreate',
           {
             "email":this.emailId,
