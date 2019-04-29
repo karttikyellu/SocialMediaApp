@@ -3,6 +3,7 @@ import { ChatIoServiceService } from '../chat-io-service.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PrimaryKeyServiceService} from '../primary-key-service.service';
 import {HttpClient} from '@angular/common/http';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-socket-messenging',
@@ -13,7 +14,6 @@ export class SocketMessengingComponent implements OnInit {
 
 
   flagObj:Boolean = false;
-
   friendEmailId: string;
   chatId:String;
   user:String;
@@ -65,13 +65,23 @@ export class SocketMessengingComponent implements OnInit {
 
         });
 
+
+
   }
 
   sendMessage()
   {
     if( this.chatId.length > 0 && this.messageText.length > 0 ){
       this.chatService.sendMessage({userName:this.primaryKeyService.getEmailId(), userRoom:this.chatId, message:this.messageText});
+      // console.log("hi hello");
+        var d = $('.scroll');
+        d.append( "<br/>" );
+        var height = d.prop("scrollHeight");
+        d.scrollTop(height);
+    //  console.log(d.prop("scrollHeight")+100);
     }
   }
+
+
 
 }

@@ -4,7 +4,7 @@ padding:50px;
 }
 .container{
   background-color:white;
-  border: 15px double #3F51B5;
+  border: 15px outset #3F51B5;
 
 }
 .top{

@@ -1,10 +1,10 @@
 <div [ngSwitch]="isFriend">
   <div *ngSwitchCase="'1'">
-    <button class = " btn-primary" (click)="addFriend()">Add Friend</button>
+    <button class = "btn btn-success" (click)="addFriend()">Add Friend</button>
   </div>
   <div *ngSwitchCase="'2'">
-    <strong>Friend Request Sent</strong>
-    <button  class = " btn btn-default" (click)="cancelRequest()">Cancelfgfgf Request</button>
+    <strong>Friend Request Sent &nbsp;</strong>
+    <button  class = " btn btn-danger" (click)="cancelRequest()">Cancel Request</button>
   </div>
   <div *ngSwitchCase="'3'">
     <strong>Friends</strong>

@@ -31,6 +31,9 @@ export class SearchComponent implements OnInit {
   {
     this.searchName = event.target.value;
 
+  if(this.searchName.length == 0){
+    this.arrayOfIds = new Array();
+  }
     if(this.searchName.length > 0)
     {
       console.log(this.searchName);

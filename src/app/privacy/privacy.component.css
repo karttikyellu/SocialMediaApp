@@ -1,3 +1,11 @@
-.privacyList{
-  padding:100px;
+.privacy{
+  margin-top:10px;
+}
+
+button{
+margin-top: 12px;
+}
+
+.priv{
+  padding-top: 15px;
 }
