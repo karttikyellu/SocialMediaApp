@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { PrimaryKeyServiceService } from '../primary-key-service.service';
+import { FriendPrimaryKeyService } from '../friend-primary-key.service';
 
 @Component({
   selector: 'app-my-profile-each-post',
@@ -28,60 +29,125 @@ export class MyProfileEachPostComponent implements OnInit {
   commentIdArray:string[];
 
   newCommentText:string = "";
+  date:string;
   selectedImageOrVideo:File = null;
 
+  requestComments:boolean = false;
 
-  constructor(private http: HttpClient , private router: Router,  private primaryKeyService: PrimaryKeyServiceService) { }
+  serverResponseFlag:boolean = false;
+  serverResponse:String = "";
+
+  isAdmin:boolean = false;
+
+
+  constructor(private http: HttpClient , private router: Router,  private primaryKeyService: PrimaryKeyServiceService, private friendPrimaryKeyService: FriendPrimaryKeyService) { }
 
   ngOnInit() {
-    console.log("id is "+this.userId);
+    console.log("id of each post "+this.userId);
 
     this.userPrimaryKey = this.primaryKeyService.getPrimaryKey();
+
+    this.isAdmin = this.primaryKeyService.getIsAdmin();
 
     //getting the user email to use it in post request
     let obsToGetTheUserEmail = this.http.get('http://localhost:3000/person/userInfo/'+this.userPrimaryKey);
     obsToGetTheUserEmail.subscribe((data:any) =>
-        {
+    {
 
-          this.userPrimaryMailId = data.email;
+      this.userPrimaryMailId = data.email;
 
-        });
+    });
 
     //getting the post details
     let obs = this.http.get('http://localhost:3000/person/getThisPost/'+this.userId);
     obs.subscribe((data:any) =>
+    {
+      console.log("search child response : "+data);
+
+      this.datePosted = data.userModel.datePosted;
+      this.date = new Date(this.datePosted).toUTCString() ;
+      this.date = this.date.split(' ').slice(0, 5).join(' ');
+      this.postTexted = data.userModel.textEntered;
+      if( data.userModel.postImageOrVideo != null )
+      {
+        if(data.userModel.postImageOrVideo.endsWith(".JPG") || data.userModel.postImageOrVideo.endsWith(".jpg") || data.userModel.postImageOrVideo.endsWith(".png") || data.userModel.postImageOrVideo.endsWith(".PNG") || data.userModel.postImageOrVideo.endsWith(".jpeg") )
         {
-          console.log("search child response : "+data);
+          console.log("Image ...");
+          this.imageFlag = true;
+          this.imgOrVid = "http://localhost:3000/PostsBinaryData/"+data.userModel.postImageOrVideo;
+        }
+        if(data.userModel.postImageOrVideo.endsWith(".mp4"))
+        {
+          console.log("video ...");
+          this.videoFlag = true;
+          this.videoSource = "http://localhost:3000/PostsBinaryData/"+data.userModel.postImageOrVideo;
+        }
+      }
 
-          this.datePosted = data.userModel.datePosted;
-          this.postTexted = data.userModel.textEntered;
-          if( data.userModel.postImageOrVideo != null )
+      if( this.isAdmin ) {
+        this.requestComments = false;
+      }
+      else {
+        //If he is not an admin
+        if( data.userModel.isCommentable == true ){
+          //requestComments = false;
+          this.requestComments = false;
+        }
+        else{
+          this.requestComments = true;
+
+          let obsGetCommentableInfo = this.http.get('http://localhost:3000/person/isCommentableInfo/'+this.friendPrimaryKeyService.getEmailId()+"/"+this.primaryKeyService.getEmailId()+"/"+this.userId);
+          obsGetCommentableInfo.subscribe((data:any) =>
           {
-            if(data.userModel.postImageOrVideo.endsWith(".JPG") || data.userModel.postImageOrVideo.endsWith(".jpg") || data.userModel.postImageOrVideo.endsWith(".png") || data.userModel.postImageOrVideo.endsWith(".PNG"))
-            {
-              console.log("Image ...");
-              this.imageFlag = true;
-              this.imgOrVid = "http://localhost:3000/PostsBinaryData/"+data.userModel.postImageOrVideo;
+            console.log("pre user commentability : "+data);
+            this.serverResponseFlag = false;
+            this.serverResponse = "";
+
+            if(data.userModel != null){
+              //not a new request
+              if(data.userModel.status == 1){
+                // waiting for the friend to accept this comment request
+                console.log("1");
+                this.serverResponseFlag = true;
+                this.serverResponse = "waiting for the friend to accept this comment request";
+              }
+              else if(data.userModel.status == 2){
+                // friend has accepted his comments request and so this guy can comment in the normal way
+                console.log("2");
+                this.requestComments = false;
+                this.serverResponseFlag = false;
+                this.serverResponse = "";
+              }
+              else if(data.userModel.status == 3){
+                // friend has rejected your comment request
+                console.log("3");
+                this.serverResponseFlag = true;
+                this.serverResponse = "This dude rejected your comment request";
+              }
+
             }
-            if(data.userModel.postImageOrVideo.endsWith(".mp4"))
-            {
-              console.log("video ...");
-              this.videoFlag = true;
-              this.videoSource = "http://localhost:3000/PostsBinaryData/"+data.userModel.postImageOrVideo;
-            }
-          }
-        });
+
+
+          });
+
+        }
+
+      }
+
+
+    });
 
   }
 
-  onCommentTextEntered(event:any)
-  {
-    this.newCommentText = event.target.value;
-  }
+  // onCommentTextEntered(event:any)
+  // {
+  //   this.newCommentText = event.target.value;
+  //   console.log("dynamicText : "+this.dynamicText);
+  // }
 
   onImageUpload(event:any)
   {
-    console.log("selected img : "+event.target.files[0]);
+    console.log("selected img : "+event);
     this.selectedImageOrVideo = event.target.files[0];
   }
 
@@ -93,19 +159,19 @@ export class MyProfileEachPostComponent implements OnInit {
       this.showCommentsFlag = true;
       let obsGettingAllCommentsOnThisPost = this.http.get('http://localhost:3000/person/commentsOnThisPostGet/'+this.userId);
       obsGettingAllCommentsOnThisPost.subscribe((data:any) =>
-          {
-            console.log("search child response : "+data);
+      {
+        console.log("search child response : "+data);
 
-            this.commentIdArray = new Array();
-            this.commentIdArray = data.userModel.map(a => a._id);
+        this.commentIdArray = new Array();
+        this.commentIdArray = data.userModel.map(a => a._id).reverse();
 
-            if(this.commentIdArray.length > 0)
-            {
-              //there are few comments which has to be loaded in child views
-              this.showCommentsFlag = true;
-            }
+        if(this.commentIdArray.length > 0)
+        {
+          //there are few comments which has to be loaded in child views
+          this.showCommentsFlag = true;
+        }
 
-          });
+      });
     }
     else
     {
@@ -129,19 +195,83 @@ export class MyProfileEachPostComponent implements OnInit {
       fd.append("commentImageOrVideo", this.selectedImageOrVideo);
 
       let obs = this.http.post('http://localhost:3000/person/commentsOnThisPost', fd);
-
       obs.subscribe((data:any) => {
-        console.log(data);
-        this.showCommentsFlag = false;
-        this.openComments();
+          console.log(data);
+
+          this.newCommentText = "";
+          this.selectedImageOrVideo = null;
+          this.openComments();
+          this.openComments();
+
         },
         (err:any) => {
-            console.log(err);
+          console.log(err);
         });
 
     }
+  }
 
+  requestForComments()
+  {
+    // console.log("serious : "+this.primaryKeyService.getEmailId()+" |||| "+this.friendPrimaryKeyService.getEmailId());
 
+    if(this.friendPrimaryKeyService.getEmailId() == undefined || this.friendPrimaryKeyService.getEmailId() == "" ){
+      console.log("same user's profile");
+    }
+    else{
+      console.log("diff user's profile");
+      let obsGetCommentableInfo = this.http.get('http://localhost:3000/person/isCommentableInfo/'+this.friendPrimaryKeyService.getEmailId()+"/"+this.primaryKeyService.getEmailId()+"/"+this.userId);
+      obsGetCommentableInfo.subscribe((data:any) =>
+      {
+        console.log("user commentability : "+data);
+        this.serverResponseFlag = false;
+        this.serverResponse = "";
+
+        if(data.userModel == null)
+        {
+          // create new notification about this comment
+          console.log("0");
+          let obsCreateCommentableInfo = this.http.get('http://localhost:3000/person/isCommentableCreateNew/'+this.friendPrimaryKeyService.getEmailId()+"/"+this.primaryKeyService.getEmailId()+"/"+this.userId);
+          obsCreateCommentableInfo.subscribe((data:any) => {
+              console.log(data);
+            },
+            (err:any) => {
+              console.log(err);
+            });
+        }
+        else if(data.userModel.status == 1){
+          // waiting for the friend to accept this comment request
+          console.log("1");
+          this.serverResponseFlag = true;
+          this.serverResponse = "waiting for the friend to accept this comment request";
+        }
+        else if(data.userModel.status == 2){
+          // friend has accepted his comments request and so this guy can comment in the normal way
+          console.log("2");
+          this.requestComments = false;
+          this.serverResponseFlag = false;
+          this.serverResponse = "";
+        }
+        else if(data.userModel.status == 3){
+          // friend has rejected your comment request
+          console.log("3");
+          this.serverResponseFlag = true;
+          this.serverResponse = "This dude rejected your comment request";
+        }
+
+      });
+    }
+  }
+
+  deleteThisPost() {
+
+    let deleteThisPostByAdminObs = this.http.get('http://localhost:3000/person/deleteThisPost/'+this.userId);
+    deleteThisPostByAdminObs.subscribe((data:any) => {
+      console.log(data);
+      if(data.res == true) {
+        console.log("deleted this post");
+      }
+    });
   }
 
 }

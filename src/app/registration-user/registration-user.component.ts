@@ -251,12 +251,12 @@ export class RegistrationUserComponent implements OnInit {
   selectedImage:File = null;
   errorFlag: boolean = false;
   dateOfBirth: Date;
+
   constructor(private http: HttpClient , private router: Router) {
   }
 
   ngOnInit() {
     this.errorFlag = false;
-
     function strongPasswordCheck(input: any) {
       let alphaNumCheck = false, lowercaseCheck = false, uppercaseCheck = false, numberCheck = false;
 
@@ -300,12 +300,12 @@ export class RegistrationUserComponent implements OnInit {
             $('#username + span').removeClass('info');
             $('#username + span').text('ok');
             $('#username + span').addClass('ok');
-
           } else {
             $('#username +span').text('Error');
             $('#username +span').addClass('error');
           }
         } else {
+
           $('#username + span').hide();
         }
       });
@@ -323,7 +323,6 @@ export class RegistrationUserComponent implements OnInit {
               $('#userpassword + span').removeClass('info');
               $('#userpassword + span').text('OK');
               $('#userpassword + span').addClass('ok');
-
             } else {
               $('#userpassword + span').html(error);
             }
@@ -348,7 +347,6 @@ export class RegistrationUserComponent implements OnInit {
               $('#userconfirmpassword + span').removeClass('info');
               $('#userconfirmpassword + span').text('OK');
               $('#userconfirmpassword + span').addClass('ok');
-
             }
           } else {
             $('#userconfirmpassword + span').text('Error');
@@ -373,10 +371,12 @@ export class RegistrationUserComponent implements OnInit {
                email: $('#useremail').val()
              },
              function(data, status){
-               if(data)
+               if(data) {
                  $('#useremail + span').text('Email Id is taken');
-               else
+               }
+               else {
                  $('#useremail + span').text('OK');
+               }
              });
           } else {
             $('#useremail + span').text('Error');
@@ -395,6 +395,7 @@ export class RegistrationUserComponent implements OnInit {
 
   registrationInputForFullName(event: any) {
     this.fullName = event.target.value;
+
   }
 
   registrationInputForEmail(event: any) {
@@ -420,61 +421,59 @@ export class RegistrationUserComponent implements OnInit {
 
     if(this.fullName=='' || this.emailId=='' || this.password=='' || ""+this.dateOfBirth=="" || this.selectedImage==null){
       $('#msg').html('Please enter all the (*)required fields');
-    }
-
-    console.log('dateOfBirth ' + this.dateOfBirth);
-    console.log('emailId ' + this.emailId);
-    console.log('password ' + this.password);
-    console.log('fullName ' + this.fullName);
-    console.log('address ' + this.address);
-    // console.log('pic ' + this.selectedImage.name);
-    console.log('errorFlag ' + this.errorFlag);
-
-
-    const fd = new FormData();
-    fd.append('name', this.fullName);
-    fd.append('address', 'McCallum');
-    fd.append('dateOfBirth', ""+this.dateOfBirth);
-    fd.append('email', this.emailId);
-    fd.append('password', this.password);
-    fd.append('personPic', this.selectedImage);
-
-    let obs = this.http.post('http://localhost:3000/person/newUserCreation', fd);
-    obs.subscribe((data:any) => {
-        console.log(data);
-        $('#msg').html('User Registration Successful');
-        this.router.navigate(['/login']);
-        let obs1 = this.http.post('http://localhost:3000/person/privacySettingsCreate',
-          {
-            "email":this.emailId,
-            "privacy":"public"
-          }
-        );
-        obs1.subscribe((data:any) => {
-            console.log("successfully inserted the privacy settings ");
+    } else {
+      console.log('dateOfBirth ' + this.dateOfBirth);
+      console.log('emailId ' + this.emailId);
+      console.log('password ' + this.password);
+      console.log('fullName ' + this.fullName);
+      console.log('address ' + this.address);
+      // console.log('pic ' + this.selectedImage.name);
+      console.log('errorFlag ' + this.errorFlag);
 
 
+      const fd = new FormData();
+      fd.append('name', this.fullName);
+      fd.append('address', 'McCallum');
+      fd.append('dateOfBirth', "" + this.dateOfBirth);
+      fd.append('email', this.emailId);
+      fd.append('password', this.password);
+      fd.append('personPic', this.selectedImage);
 
-            let obs2 = this.http.get('http://localhost:3000/person/addFriendFirstTime/'+this.emailId);
-            obs2.subscribe((data:any) => {
-                console.log("successfully inserted the friends table ");
-              },
-              (err:any) => {
-                console.log("failed to insert the privacy settings ");
-              }
-            );
+      let obs = this.http.post('http://localhost:3000/person/newUserCreation', fd);
+      obs.subscribe((data: any) => {
+          console.log(data);
+          $('#msg').html('User Registration Successful');
+          this.router.navigate(['/login']);
+          let obs1 = this.http.post('http://localhost:3000/person/privacySettingsCreate',
+            {
+              "email": this.emailId,
+              "privacy": "public"
+            }
+          );
+          obs1.subscribe((data: any) => {
+              console.log("successfully inserted the privacy settings ");
 
 
+              let obs2 = this.http.get('http://localhost:3000/person/addFriendFirstTime/' + this.emailId);
+              obs2.subscribe((data: any) => {
+                  console.log("successfully inserted the friends table ");
+                },
+                (err: any) => {
+                  console.log("failed to insert the privacy settings ");
+                }
+              );
 
-          },
-          (err:any) => {
-            console.log("failed to insert the privacy settings ");
-          }
-        );
 
-      },
-      (err:any) => {
-        console.log(err);
-      });
+            },
+            (err: any) => {
+              console.log("failed to insert the privacy settings ");
+            }
+          );
+
+        },
+        (err: any) => {
+          console.log(err);
+        });
+      }
   }
 }

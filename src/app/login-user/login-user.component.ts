@@ -15,7 +15,9 @@ export class LoginUserComponent implements OnInit {
   errorFlag:boolean;
   emailid:string = "";
   password:string = "";
+  service:any;
   constructor( private http: HttpClient , private router: Router , private primaryKeyService: PrimaryKeyServiceService ) {
+    this.service = primaryKeyService;
    }
 
   ngOnInit() {
@@ -48,6 +50,14 @@ export class LoginUserComponent implements OnInit {
           if(data.error == false) {
             // no error
             console.log('login id : ' + data.userModel._id);
+
+            if(this.emailid === "admin@gmail.com") {
+              this.primaryKeyService.setIsAdmin(true);
+            }
+            else {
+              this.primaryKeyService.setIsAdmin(false);
+            }
+
             this.errorFlag = false;
             this.primaryKeyService.setPrimaryKey(data.userModel._id);
             this.primaryKeyService.setEmailId(data.userModel.email);

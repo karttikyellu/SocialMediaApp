@@ -29,7 +29,13 @@ export class FriendProfileRequestComponent implements OnInit {
   }
 
   addFriend() {
-    const obs = this.http.get('http://localhost:3000/person/createNotificationForFriends/' + this.emailId + '/' + this.friendEmailId);
+    let obs = this.http.post('http://localhost:3000/person/emailNotifications',
+      {'emailId':this.emailId, 'friendEmailId':this.friendEmailId});
+    obs.subscribe((data: any) => {
+      console.log("Email Sent");
+    });
+
+    obs = this.http.get('http://localhost:3000/person/createNotificationForFriends/' + this.emailId + '/' + this.friendEmailId);
     obs.subscribe((data: any) => {
       console.log("Sent Notification");
       this.isFriend = '2';

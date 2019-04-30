@@ -1,8 +1,9 @@
 <div class="row main">
   <div class="col-md-4 offset-md-2 ">
 <div  class = "size"  >
-  <small>DatePosted : {{datePosted}}</small>
   <h3 style = ""><b>{{postTexted}}</b></h3>
+  <small>{{date}}</small>
+  <button *ngIf="isAdmin" (click)="deleteThisPost()">Delete!</button>
 
   <div *ngIf="imageFlag">
     <div class="card" style="width: 500px">

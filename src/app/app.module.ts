@@ -13,6 +13,8 @@ import { MyProfileEachPostComponent } from './my-profile-each-post/my-profile-ea
 import { EachCommentOfPostsComponent } from './each-comment-of-posts/each-comment-of-posts.component';
 import { FriendProfileRequestComponent } from './friend-profile-request/friend-profile-request.component';
 import { MessageEachChildComponent } from './message-each-child/message-each-child.component';
+import { NotificationCommentsEachChildComponent } from './notification-comments-each-child/notification-comments-each-child.component';
+import {RequestsComponent} from "./requests/requests.component";
 // import { SocketMessengingComponent } from './socket-messenging/socket-messenging.component';
 
 
@@ -25,7 +27,9 @@ import { MessageEachChildComponent } from './message-each-child/message-each-chi
     MyProfileEachPostComponent,
     EachCommentOfPostsComponent,
     FriendProfileRequestComponent,
-    MessageEachChildComponent
+    MessageEachChildComponent,
+    NotificationCommentsEachChildComponent,
+    RequestsComponent
   ],
   imports: [
     BrowserModule,
