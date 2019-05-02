@@ -10,6 +10,7 @@ export class ViewAccountComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+
   }
 
 }

@@ -17,7 +17,10 @@ export class FriendProfilePageComponent implements OnInit {
   friendProfilePicture: string;
   friendName: string;
   arrayOfIds:string[];
-  isConnected:boolean;
+  isConnected:boolean = false;
+
+  //searching the posts content
+  searchForPostsContentString:String ="";
 
   selectedPrivacySettings: String = ''; // selected privacy option
   errorFlag:boolean = false; //to control the privacy settings
@@ -27,6 +30,9 @@ export class FriendProfilePageComponent implements OnInit {
   constructor(private http: HttpClient, private route: ActivatedRoute,  private router: Router , private primaryKeyService: PrimaryKeyServiceService, private friendPrimaryKeyService: FriendPrimaryKeyService) { }
 
   ngOnInit() {
+    if(!this.primaryKeyService.getLoggedin()) {
+      this.router.navigate(['/login']);
+    }
     this.friendEmailId = this.route.snapshot.paramMap.get('id');
     this.friendPrimaryKeyService.setEmailId(this.friendEmailId);
     console.log("check " + this.friendPrimaryKeyService.getEmailId());
@@ -43,6 +49,7 @@ export class FriendProfilePageComponent implements OnInit {
       console.log('Not matched');
       let obs = this.http.get('http://localhost:3000/person/specificUserInfo/' + this.friendEmailId);
       obs.subscribe((data: any) => {
+        //Fetching Friend Details
         this.friendName = data.userModel.name;
         if (data.userModel.personPic != null) {
           if (data.userModel.personPic.endsWith('.JPG') || data.userModel.personPic.endsWith('.jpg') || data.userModel.personPic.endsWith('.png')) {
@@ -53,6 +60,7 @@ export class FriendProfilePageComponent implements OnInit {
           }
         }
 
+
       });
     }
 
@@ -61,29 +69,34 @@ export class FriendProfilePageComponent implements OnInit {
       this.isConnected = true;
       console.log("!!!!  Admin : " + this.isConnected);
     } else {
+      console.log("Checking the connection...")
       //write logic to control the privacy
       let gettingTheConnectionDetails = this.http.get('http://localhost:3000/person/areTheseTwoConnected/' + this.primaryKeyService.getEmailId() + "/" + this.friendPrimaryKeyService.getEmailId());
       gettingTheConnectionDetails.subscribe((data: any) => {
         console.log("gettingTheConnectionDetails " + data);
 
         this.isConnected = data.res;
-
         console.log("this.isConnected :  " + this.isConnected);
-
       });
     }
-
-
-    let gettingThePostsObs = this.http.get('http://localhost:3000/person/postedByThisUser/' + this.friendPrimaryKeyService.getEmailId());
-    gettingThePostsObs.subscribe((data: any) => {
-      console.log("All posts " + data);
-
-      this.arrayOfIds = new Array();
-      this.arrayOfIds = data.userModel.map(a => a._id).reverse();
-      console.log(" length  " + this.arrayOfIds);
-
-    });
+    this.postsMadeByThisUserMethod();
   }
+
+    postsMadeByThisUserMethod() {
+
+      let gettingThePostsObs = this.http.get('http://localhost:3000/person/postedByThisUser/'+this.friendPrimaryKeyService.getEmailId());
+      gettingThePostsObs.subscribe((data:any) =>
+      {
+        console.log("All posts "+data);
+
+        this.arrayOfIds = new Array();
+        this.arrayOfIds = data.userModel.map(a => a._id).reverse() ;
+        console.log(" length  "+this.arrayOfIds);
+
+      });
+
+
+    }
 
     privacyChangedHandler(event: any){
       this.selectedPrivacySettings = event.target.value;
@@ -216,6 +229,36 @@ export class FriendProfilePageComponent implements OnInit {
         }
 
       });
+
+    }
+
+
+
+    searchForPostsContent(event:any) {
+
+      this.searchForPostsContentString = event.target.value;
+
+      if( this.searchForPostsContentString.length > 0 ) {
+
+        this.arrayOfIds = new Array();
+
+        let searchPostsUsingContent = this.http.get('http://localhost:3000/person/searchPostsUsingTitle/'+this.friendEmailId+"/"+this.searchForPostsContentString);
+        searchPostsUsingContent.subscribe((data:any) =>
+        {
+          console.log("searchPostsUsingContent "+data.error);
+
+          if( data.error == false ) {
+            this.arrayOfIds = data.userModel.map(a => a._id).reverse() ;
+          }
+
+        });
+
+      }
+      else {
+
+        this.postsMadeByThisUserMethod();
+
+      }
 
     }
   }

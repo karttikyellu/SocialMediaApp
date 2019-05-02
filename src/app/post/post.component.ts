@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { PrimaryKeyServiceService } from '../primary-key-service.service';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-post',
@@ -21,6 +22,9 @@ export class PostComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(!this.primaryKeyService.getLoggedin()) {
+      this.router.navigate(['/login']);
+    }
     this.userPrimaryKey = this.primaryKeyService.getPrimaryKey();
     console.log("key in post : "+this.userPrimaryKey);
 
@@ -55,6 +59,10 @@ radioCommentType(event:any){
 }
 
 postcontent(){
+  if(this.content == '' || this.selectedImageOrVideo==null){
+    $('#err').html("Please Enter all the fields");
+
+  }
   console.log("text: "+this.content);
   console.log("image: "+this.selectedImageOrVideo);
   console.log("radio: "+this.commentableFlag);

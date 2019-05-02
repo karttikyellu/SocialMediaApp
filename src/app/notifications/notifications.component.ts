@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PrimaryKeyServiceService } from '../primary-key-service.service';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-notifications',
@@ -13,10 +14,12 @@ export class NotificationsComponent implements OnInit {
 
   public requests = [];
 
-  constructor( private http: HttpClient, private primaryKeyService: PrimaryKeyServiceService ) { }
+  constructor( private http: HttpClient, private router: Router, private primaryKeyService: PrimaryKeyServiceService ) { }
 
   ngOnInit() {
-
+    if(!this.primaryKeyService.getLoggedin()) {
+      this.router.navigate(['/login']);
+    }
     let obsToGetAllCommentsNotifications = this.http.get('http://localhost:3000/person/commentsNotifications/'+this.primaryKeyService.getEmailId());
     obsToGetAllCommentsNotifications.subscribe((data:any) =>
     {

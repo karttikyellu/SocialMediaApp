@@ -61,7 +61,7 @@ export class LoginUserComponent implements OnInit {
             this.errorFlag = false;
             this.primaryKeyService.setPrimaryKey(data.userModel._id);
             this.primaryKeyService.setEmailId(data.userModel.email);
-
+            this.primaryKeyService.setIsLoggedin(true);
             console.log('login id issss: ' + this.primaryKeyService.getPrimaryKey());
             this.router.navigate(['/landing']);
           } else {

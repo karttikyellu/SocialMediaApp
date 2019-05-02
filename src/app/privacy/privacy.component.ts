@@ -105,6 +105,9 @@ constructor(private http: HttpClient , private router: Router, private primaryKe
 }
 
   ngOnInit() {
+    if(!this.primaryKeyService.getLoggedin()) {
+      this.router.navigate(['/login']);
+    }
     this.userPrimaryKey = this.primaryKeyService.getPrimaryKey();
 
     let obs = this.http.get('http://localhost:3000/person/userInfo/'+this.userPrimaryKey);

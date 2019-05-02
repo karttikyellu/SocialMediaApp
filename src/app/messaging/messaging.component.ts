@@ -24,6 +24,9 @@ export class MessagingComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(!this.primaryKeyService.getLoggedin()) {
+      this.router.navigate(['/login']);
+    }
     this.errorPresent = false;
   }
 

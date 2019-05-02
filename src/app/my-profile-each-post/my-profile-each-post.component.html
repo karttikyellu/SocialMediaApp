@@ -8,9 +8,6 @@
   <div *ngIf="imageFlag">
     <div class="card" style="width: 500px">
     <img class="img-responsive" src={{imgOrVid}}  class="img-thumbnail" width="500" height="500">
-    <!-- <div class="card-body">
-      <h4 class="card-text">{{postTexted}}</h4>
-    </div> -->
     </div>
   </div>
   <div *ngIf="videoFlag" width="500px" height="300px">
@@ -19,19 +16,17 @@
     </video>
   </div>
   <br>
-    <button type="button"class="btn btn-primary btn-sm"   (click)="openComments()">Comments</button>
+    <button *ngIf="!requestComments" type="button" class="btn btn-primary btn-sm" style="font-size:15px"  (click)="openComments()">Comments <i class="fa fa-comments-o"></i> </button>
+    <button *ngIf="requestComments" type="button" class="btn btn-primary btn-sm" style="font-size:15px"  (click)="requestForComments()">Request permission to Comment! <i class="fa fa-comments-o"></i> </button>
+    <p *ngIf="serverResponseFlag">{{serverResponse}}</p>
     <div *ngIf = "showCommentsFlag">
       <br>
       <div class = "row col-md-10">
-    	<div class = "form-group">
-      <input type="text" (keydown.Enter)="postNewComment()" class="form-control round" id="commentText" name="commentText"   placeholder = " write a comment..."(keyup) = "onCommentTextEntered($event)">
-      </div>&nbsp;
-      <div class = "form-group">
-      <button  type="button" id="com" class="commentbutton" class="btn btn-success btn-sm" (click)="postNewComment()" >Comment!</button>
-    </div>
-    </div>
-    <input type="file"  name ="commentPic" accept="image/*|video/* " (change) = "onImageUpload($event)"><br>
+        <input type="text" class="form-control round" id="commentText" name="commentText"   placeholder = " Write a comment..." (keydown.enter)="postNewComment()" [(ngModel)]="newCommentText" >
+        <input type="file" class="col-md-3" id="files" class="" name ="commentPic" accept="image/*|video/* " (change) = "onImageUpload($event)">
 
+        <button type="button col-md-1" class="post btn btn-secondary btn-sm" (click)="postNewComment()">Post</button>
+      </div>
       <br>
       <app-each-comment-of-posts *ngFor="let eachCommentId of commentIdArray" [eachCommentId]="eachCommentId"></app-each-comment-of-posts>
     </div>
@@ -39,19 +34,3 @@
 </div>
 </div>
 <br/>
-
-
-
-
-
-
-
-
-
-
-<!-- <div class="card" style="width: 18rem;">
-  <img class="card-img-top" src="..." alt="Card image cap">
-  <div class="card-body">
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-  </div>
-</div> -->

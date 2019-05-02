@@ -9,6 +9,7 @@ export class PrimaryKeyServiceService {
   emailId: string = '';
   isAdmin:boolean = false;
   isNameError:boolean = true; isEmailError:boolean = true; isPasswordError: boolean = true;passwordMatchError: boolean = true;
+  Loggedin:boolean = false;
 
   constructor() { }
 
@@ -50,6 +51,14 @@ export class PrimaryKeyServiceService {
 
   getIsAdmin() {
     return this.isAdmin;
+  }
+
+  setIsLoggedin(value: boolean) {
+    this.Loggedin = value;
+  }
+
+  getLoggedin() {
+    return this.Loggedin;
   }
 
   isRegistrationFormValid() {

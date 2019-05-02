@@ -19,6 +19,9 @@ export class LandingPageComponent implements OnInit {
    }
 
   ngOnInit() {
+    if(!this.primaryKeyService.getLoggedin()) {
+      this.router.navigate(['/login']);
+    }
     this.primaryKey = this.primaryKeyService.getPrimaryKey();
     this.emailId = this.primaryKeyService.getEmailId();
     let obs = this.http.get('http://localhost:3000/person/specificUserInfo/' + this.emailId);
@@ -40,4 +43,9 @@ export class LandingPageComponent implements OnInit {
 
   }
 
+  Logout() {
+    this.primaryKeyService.setIsLoggedin(false);
+    console.log("Logged out");
+    this.router.navigate(['/login']);
+  }
 }

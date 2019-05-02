@@ -14,6 +14,7 @@ export class MyProfileEachPostComponent implements OnInit {
   @Input() userId:string;
 
   datePosted:Date;
+  date: string;
   postTexted:string = "";
   imgOrVid:string = "";
 
@@ -29,7 +30,6 @@ export class MyProfileEachPostComponent implements OnInit {
   commentIdArray:string[];
 
   newCommentText:string = "";
-  date:string;
   selectedImageOrVideo:File = null;
 
   requestComments:boolean = false;
@@ -65,7 +65,7 @@ export class MyProfileEachPostComponent implements OnInit {
       console.log("search child response : "+data);
 
       this.datePosted = data.userModel.datePosted;
-      this.date = new Date(this.datePosted).toUTCString() ;
+      this.date = new Date(this.datePosted).toUTCString();
       this.date = this.date.split(' ').slice(0, 5).join(' ');
       this.postTexted = data.userModel.textEntered;
       if( data.userModel.postImageOrVideo != null )
@@ -138,12 +138,6 @@ export class MyProfileEachPostComponent implements OnInit {
     });
 
   }
-
-  // onCommentTextEntered(event:any)
-  // {
-  //   this.newCommentText = event.target.value;
-  //   console.log("dynamicText : "+this.dynamicText);
-  // }
 
   onImageUpload(event:any)
   {
