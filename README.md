@@ -1,5 +1,7 @@
 # SocialMediaApp
 
+Web application which simulates main functionalities of Social Media sites like posting content, commenting, personal messaging, sending and receiving friend requests and search for friends profile.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.3.
 
 ## Development server
